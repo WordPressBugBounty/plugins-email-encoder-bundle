@@ -1,20 +1,7 @@
 <?php
 
-/**
- * Email_Encoder_Helpers Class
- *
- * This class contains all of the available helper functions
- *
- * @since 2.0.0
- */
+namespace Legacy\EmailEncoderBundle;
 
-/**
- * The helpers of the plugin.
- *
- * @since 2.0.0
- * @package EEB
- * @author Ironikus <info@ironikus.com>
- */
 class Email_Encoder_Helpers {
 
 	/**
@@ -23,13 +10,13 @@ class Email_Encoder_Helpers {
 	 * @param $param
 	 * @return bool
 	 */
-	public function is_page( $param ){
+	public function is_page( ?string $param ): bool {
 		if( empty( $param ) ){
 			return false;
 		}
 
-		if( isset( $_GET['page'] ) ){
-			if( $_GET['page'] == $param ){
+		if( isset( $_GET['page'] ) ) {
+			if( $_GET['page'] == $param ) {
 				return true;
 			}
 		}
@@ -45,25 +32,25 @@ class Email_Encoder_Helpers {
 	 * @param bool $is_dismissible - If the message should be dismissible
 	 * @return string - The formatted admin notice
 	 */
-	public function create_admin_notice($content, $type = 'info', $is_dismissible = true){
-		if(empty($content))
+	public function create_admin_notice( $content, $type = 'info', $is_dismissible = true ) {
+		if( empty( $content ) )
 			return '';
 
 		/**
 		 * Block an admin notice based onn the specified values
 		 */
-		$throwit = apply_filters('eeb/helpers/throw_admin_notice', true, $content, $type, $is_dismissible);
-		if(!$throwit)
+		$throwit = apply_filters( 'eeb/helpers/throw_admin_notice', true, $content, $type, $is_dismissible );
+		if( ! $throwit )
 			return '';
 
-		if($is_dismissible !== true){
+		if( $is_dismissible !== true ) {
 			$isit = '';
 		} else {
 			$isit = 'is-dismissible';
 		}
 
 
-		switch($type){
+		switch( $type ) {
 			case 'info':
 				$notice = 'notice-info';
 				break;
@@ -81,7 +68,7 @@ class Email_Encoder_Helpers {
 				break;
 		}
 
-		if( is_array( $content ) ){
+		if( is_array( $content ) ) {
 			$validated_content = sprintf( __( $content[0], 'email-encoder-bundle' ), $content[1] );
         } else {
 			$validated_content = __( $content, 'email-encoder-bundle' );
@@ -102,11 +89,11 @@ class Email_Encoder_Helpers {
 	 * Formats a specific date to datetime
 	 *
 	 * @param $date
-	 * @return DateTime
+	 * @return \DateTime
 	 */
-	public function get_datetime($date){
-		$date_new = date('Y-m-d H:i:s', strtotime($date));
-		$date_new_formatted = new DateTime($date_new);
+	public function get_datetime( $date ) {
+		$date_new = date( 'Y-m-d H:i:s', strtotime( $date ) );
+		$date_new_formatted = new \DateTime( $date_new );
 
 		return $date_new_formatted;
 	}
@@ -118,9 +105,9 @@ class Email_Encoder_Helpers {
 	 * @param $args - the available args
 	 * @return string - the url
 	 */
-	public function built_url( $url, $args ){
-		if(!empty($args)){
-			$url .= '?' . http_build_query($args);
+	public function built_url( $url, $args ) {
+		if( ! empty( $args ) ) {
+			$url .= '?' . http_build_query( $args );
 		}
 
 		return $url;
@@ -133,11 +120,11 @@ class Email_Encoder_Helpers {
 	 *
 	 * @return array - the parameters of the url
 	 */
-	public function get_parameters_from_url( $url ){
+	public function get_parameters_from_url( $url ) {
 
-		$parts = parse_url($url);
+		$parts = parse_url( $url );
 
-		parse_str($parts['query'], $url_parameter);
+		parse_str( $parts['query'], $url_parameter );
 
 		return empty( $url_parameter ) ? array() : $url_parameter;
 
@@ -150,15 +137,15 @@ class Email_Encoder_Helpers {
 	 * @param $args - the available args
 	 * @return string - the url
 	 */
-	public function get_current_url($with_args = true){
+	public function get_current_url( $with_args = true ) {
 
 		$current_url = ( isset( $_SERVER['HTTPS'] ) && $_SERVER['HTTPS'] == 'on' ) ? 'https://' : 'http://';
 
 		$host_part = $_SERVER['SERVER_NAME'];
-		if( strpos( $host_part, $_SERVER['HTTP_HOST'] ) === false ){
+		if( strpos( $host_part, $_SERVER['HTTP_HOST'] ) === false ) {
 
 		    //Validate against HTTP_HOST in case SERVER_NAME has no "www" set
-			if( strpos( $_SERVER['HTTP_HOST'], '://www.' ) !== false && strpos( $host_part, '://www.' ) === false ){
+			if( strpos( $_SERVER['HTTP_HOST'], '://www.' ) !== false && strpos( $host_part, '://www.' ) === false ) {
 				$host_part = str_replace( '://', '://www.', $host_part );
 			}
 
@@ -166,7 +153,7 @@ class Email_Encoder_Helpers {
 
 		$current_url .= sanitize_text_field( $host_part ) . sanitize_text_field( $_SERVER['REQUEST_URI'] );
 
-	    if($with_args){
+	    if( $with_args ) {
 	        return $current_url;
         } else {
 	        return strtok( $current_url, '?' );
@@ -176,34 +163,34 @@ class Email_Encoder_Helpers {
 	/**
      * This is the opponent of JavaScripts decodeURIComponent()
      * @link http://stackoverflow.com/questions/1734250/what-is-the-equivalent-of-javascripts-encodeuricomponent-in-php
-     * @param string $str
+     * @param string $content
      * @return string
      */
     public function encode_uri_components( $content ) {
         $revert = array( '%21'=>'!', '%2A'=>'*', '%27'=>"'", '%28'=>'(', '%29'=>')' );
         return strtr( rawurlencode( $content ), $revert );
 	}
-	
+
 	/**
 	 * Generate a random bool value
 	 *
 	 * @return bool
 	 */
-	public function get_random_bool(){
-		return ( rand(0,1) == 1 ) ? true : false;
+	public function get_random_bool() {
+		return ( rand( 0, 1 ) == 1 ) ? true : false;
 	}
-	
+
 	/**
 	 * Better attribute parsing for HTML strings
 	 *
 	 * @since 2.1.4
 	 * @return mixed Array on success, empty string otherwise
 	 */
-	public function parse_html_attributes( $text ){
+	public function parse_html_attributes( $text ) {
 
 		$attributes = shortcode_parse_atts( $text );
 
-		if( is_array( $attributes ) ){
+		if( is_array( $attributes ) ) {
 			foreach( $attributes as $ak => $av ){
 
 				//Check if a given string contains an @ as this breaks attributes by default
@@ -238,7 +225,7 @@ class Email_Encoder_Helpers {
 			}
 		}
 
-		return apply_filters('eeb/helpers/parse_html_attributes', $attributes, $text );
+		return apply_filters( 'eeb/helpers/parse_html_attributes', $attributes, $text );
 	}
 
 	/**
@@ -274,9 +261,9 @@ class Email_Encoder_Helpers {
 		}
 
 		// Join the sanitized attributes back into a string
-		$sanitized_extra_attrs = implode(' ', $sanitized_attrs);
+		$sanitized_extra_attrs = implode( ' ', $sanitized_attrs );
 
-		return apply_filters('eeb/helpers/sanitize_html_attributes', $sanitized_extra_attrs, $sanitized_attrs, $extra_attrs );
+		return apply_filters( 'eeb/helpers/sanitize_html_attributes', $sanitized_extra_attrs, $sanitized_attrs, $extra_attrs );
 	}
-	
+
 }
