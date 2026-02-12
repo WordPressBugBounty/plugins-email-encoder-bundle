@@ -34,7 +34,7 @@ class EncoderForm
             ! $this->helper()->is_page( $this->getPageName() )
             && ! (bool) $this->getSetting( 'encoder_form_frontend', true, 'encoder_form' )
         ) {
-            return apply_filters('eeb_form_content_inactive', '' );
+            return (string) apply_filters('eeb_form_content_inactive', '' );
         }
 
         $powered_by = '';
@@ -119,7 +119,11 @@ FORM;
     }
 
 
-    public function is_post_excluded( $post_id = null )
+    /**
+     * @param int $post_id
+     * @return bool
+     */
+    public function is_post_excluded( ?int $post_id = null )
     {
 
         $return = false;
@@ -137,12 +141,10 @@ FORM;
 
             $exclude_pages = explode( ',', $skip_posts );
 
-            // if ( is_array( $exclude_pages ) ) {
-
-            $exclude_pages_validated = array();
+            $exclude_pages_validated = [];
 
             foreach ( $exclude_pages as $spost_id ) {
-                $spost_id = trim($spost_id);
+                $spost_id = trim( $spost_id );
                 if ( is_numeric( $spost_id ) ) {
                     $exclude_pages_validated[] = intval( $spost_id );
                 }
@@ -152,18 +154,16 @@ FORM;
                 $return = true;
             }
 
-            // }
-
         }
 
-        return apply_filters( 'eeb/validate/is_post_excluded', $return, $post_id, $skip_posts );
+        return (bool) apply_filters( 'eeb/validate/is_post_excluded', $return, $post_id, $skip_posts );
     }
 
     /**
      * Filter if to exclude specific URL parameters from filtering
      *
      * @since 2.2.0
-     * @param array $parameters
+     * @param array< string > $parameters
      * @return boolean
      */
     public function is_query_parameter_excluded( $parameters = null )
@@ -194,6 +194,6 @@ FORM;
 
         }
 
-        return apply_filters( 'eeb/validate/is_query_parameter_excluded', $return, $parameters );
+        return (bool) apply_filters( 'eeb/validate/is_query_parameter_excluded', $return, $parameters );
     }
 }
