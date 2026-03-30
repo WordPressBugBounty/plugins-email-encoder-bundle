@@ -3,7 +3,7 @@
         'name' => 'onlineoptimisation/email-encoder-bundle',
         'pretty_version' => 'dev-master',
         'version' => 'dev-master',
-        'reference' => '16431ca8906e45e1bce502713c0d2bf0f66673a6',
+        'reference' => '639c5191ee7b69de88474b625cc89788c28f2bb0',
         'type' => 'wordpress-plugin',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -13,7 +13,7 @@
         'onlineoptimisation/email-encoder-bundle' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '16431ca8906e45e1bce502713c0d2bf0f66673a6',
+            'reference' => '639c5191ee7b69de88474b625cc89788c28f2bb0',
             'type' => 'wordpress-plugin',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
