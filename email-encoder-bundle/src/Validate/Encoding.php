@@ -218,7 +218,7 @@ class Encoding
         $email     = '';
         $class_ori = ( empty( $attrs['class'] ) ) ? '' : $attrs['class'];
         $custom_class = (string) $this->getSetting( 'class_name', true );
-        $show_encoded_check = (string) $this->getSetting( 'show_encoded_check', true );
+        $show_encoded_check = $this->getSettingBool( 'show_encoded_check', true );
 
         if ( ! empty( $attrs['href'] ) && stripos( $attrs['href'], 'mailto:' ) === 0 ) {
             $email = substr( $attrs['href'], 7 );
@@ -283,7 +283,7 @@ class Encoding
         $link = $this->filterPlainEmails( $link, null, 'char_encode' );
 
         // mark link as successfullly encoded (for admin users)
-        if ( current_user_can( $this->getAdminCap( 'frontend-display-security-check' ) ) && $show_encoded_check !== '' ) {
+        if ( current_user_can( $this->getAdminCap( 'frontend-display-security-check' ) ) && $show_encoded_check ) {
             $link .= $this->get_encoded_email_icon();
         }
 
@@ -304,7 +304,7 @@ class Encoding
         $email     = '';
         $class_ori = ( empty( $attrs['class'] ) ) ? '' : $attrs['class'];
         $custom_class = (string) $this->getSetting( 'class_name', true );
-        $show_encoded_check = (string) $this->getSetting( 'show_encoded_check', true );
+        $show_encoded_check = $this->getSettingBool( 'show_encoded_check', true );
 
         // set user-defined class
         if ( $custom_class !== '' && strpos( $class_ori, $custom_class ) === false ) {
@@ -335,7 +335,18 @@ class Encoding
 
         $link .= '>';
 
-        $link .= $this->get_protected_display( $display, $protection_method );
+        // Only scramble the display when it's plain text (classic <a href="tel:x">x</a> shape).
+        // Builder/block icons (<a href="tel:x"><img>/<svg></a>) must be kept intact: the CSS
+        // method strips tags (icon vanishes) and the image method can't derive an email from
+        // markup (broken <img src="">). The href itself is still entity-encoded above.
+        // Mirrors the same guard in create_protected_mailto().
+        $display_is_plain_text = ( trim( (string) $display ) === trim( wp_strip_all_tags( (string) $display ) ) );
+
+        if ( $display_is_plain_text ) {
+            $link .= $this->get_protected_display( $display, $protection_method );
+        } else {
+            $link .= $display;
+        }
 
         $link .= '</a>';
 
