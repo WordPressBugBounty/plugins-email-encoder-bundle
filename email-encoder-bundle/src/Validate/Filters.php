@@ -335,7 +335,7 @@ class Filters
                 $attr_name = trim( $s_attr );
 
                 $callbackEncodeCustomLinks = function ( $match ) use ( $self, $protection_method ) {
-                    $attrs = shortcode_parse_atts( $match[1] );
+                    $attrs = $this->helper()->parse_html_attributes( $match[1] );
                     return $self->createProtectedHrefAtt( $match[4], $attrs, $protection_method );
                 };
 

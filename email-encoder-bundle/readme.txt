@@ -1,10 +1,10 @@
 === Email Encoder - Protect Email Addresses and Phone Numbers ===
 Contributors: onlineoptimisation
-Tags: anti spam, protect, encode, encrypt, hide, antispam, phone number, spambot, secure, e-mail, email, mail
+Tags: anti spam, protect, encode, encrypt, hide
 Requires at least: 4.7
 Requires PHP: 7.4
-Tested up to: 7.0
-Stable tag: 2.5.5
+Tested up to: 7.1
+Stable tag: 2.5.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Author URI: https://wpemailencoder.com/
@@ -125,6 +125,12 @@ Yes, since version 1.3.0 also special characters are supported.
 * Title icon on Admin Options Page was made by [Jack Cai](http://www.doublejdesign.co.uk/)
 
 == Changelog ==
+
+= 2.5.6: November 24, 2026 =
+* Security: Fixed a stored cross-site scripting (XSS) issue in protected phone and other custom links (CVE-2026-111803). Only sites with a value such as "tel" in Protect custom href attributes were affected. Thanks to Wordfence for the responsible disclosure. Please update.
+* Security: Protected email links using the "without JavaScript" method now escape the link address the same way
+* Fix: Admin notices that other plugins keep hidden (for example an empty "REST API error" notice from Real Cookie Banner) showed up on the Email Encoder settings page
+* Tested up to WordPress 7.1
 
 = 2.5.5: September 21, 2026 =
 * Fix: In Elementor's Icon List (and similar page-builder layouts) a protected email could drop onto a second line below its icon — the icon and text are now left exactly where the builder put them

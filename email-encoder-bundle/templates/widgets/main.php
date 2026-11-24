@@ -168,13 +168,13 @@ if ( ! isset( $tabs[ $active_tab ] ) ) {
 						?>
 							<div class="eeb-setting eeb-setting--text">
 								<div class="eeb-setting-header">
-									<h4><label for="<?php echo $text_id; ?>"><?php echo wp_kses_post( $data['label'] ); ?></label></h4>
+									<h4><label for="<?php echo esc_attr( $text_id ); ?>"><?php echo wp_kses_post( $data['label'] ); ?></label></h4>
 									<?php if ( isset( $data['description'] ) ) : ?>
 										<p class="eeb-setting-sublabel"><?php echo wp_kses_post( $data['description'] ); ?></p>
 									<?php endif; ?>
 								</div>
 								<div class="eeb-setting-body">
-									<input id="<?php echo $text_id; ?>"
+									<input id="<?php echo esc_attr( $text_id ); ?>"
 										   name="<?php echo esc_attr( $this->getSettingsKey() ); ?>[<?php echo esc_attr( $si_name ); ?>]"
 										   type="text"
 										   class="eeb-input"
@@ -186,8 +186,8 @@ if ( ! isset( $tabs[ $active_tab ] ) ) {
 							$option_id = esc_attr( $si_name . '_' . $si_key );
 							$icon = ! empty( $data['icon'] ) ? $data['icon'] : 'marker';
 						?>
-							<label class="eeb-radio-card" for="<?php echo $option_id; ?>">
-								<input id="<?php echo $option_id; ?>"
+							<label class="eeb-radio-card" for="<?php echo esc_attr( $option_id ); ?>">
+								<input id="<?php echo esc_attr( $option_id ); ?>"
 									   class="eeb-radio-card-input"
 									   name="<?php echo esc_attr( $this->getSettingsKey() ); ?>[<?php echo esc_attr( $si_name ); ?>]"
 									   type="radio"
@@ -213,7 +213,7 @@ if ( ! isset( $tabs[ $active_tab ] ) ) {
 							$option_id = esc_attr( $si_name . '_' . $si_key );
 						?>
 							<div class="eeb-option-row">
-								<label for="<?php echo $option_id; ?>" class="eeb-option-label">
+								<label for="<?php echo esc_attr( $option_id ); ?>" class="eeb-option-label">
 									<?php echo wp_kses_post( $data['label'] ); ?>
 								</label>
 								<?php if ( isset( $data['description'] ) ) : ?>
@@ -222,10 +222,10 @@ if ( ! isset( $tabs[ $active_tab ] ) ) {
 										<span class="eeb-tooltip-text"><?php echo esc_html( wp_strip_all_tags( $data['description'] ) ); ?></span>
 									</span>
 								<?php endif; ?>
-								<label class="eeb-option" for="<?php echo $option_id; ?>">
+								<label class="eeb-option" for="<?php echo esc_attr( $option_id ); ?>">
 									<?php // Hidden zero submits when checkbox is unchecked, so the saved option always reflects the toggle state. ?>
 									<input type="hidden" name="<?php echo esc_attr( $this->getSettingsKey() ); ?>[<?php echo esc_attr( $si_name ); ?>]" value="0" />
-									<input id="<?php echo $option_id; ?>"
+									<input id="<?php echo esc_attr( $option_id ); ?>"
 										   name="<?php echo esc_attr( $this->getSettingsKey() ); ?>[<?php echo esc_attr( $si_name ); ?>]"
 										   type="checkbox"
 										   value="<?php echo esc_attr( $mi_value ); ?>"

@@ -189,7 +189,7 @@ class Email_Encoder_Helpers {
 	 */
 	public function parse_html_attributes( string $text ) {
 
-		$attributes = shortcode_parse_atts( $text );
+		$attributes = $this->parse_atts_literal( $text );
 
 		// if( is_array( $attributes ) ) {
 			foreach( $attributes as $ak => $av ){
@@ -198,7 +198,7 @@ class Email_Encoder_Helpers {
 				$ident = '@';
 				if( substr( $av, 0, strlen( $ident ) ) === $ident ){
 					$validated_attribute = substr( $av, strlen( $ident ) );
-					$new_attr = shortcode_parse_atts( $validated_attribute );
+					$new_attr = $this->parse_atts_literal( $validated_attribute );
 
 					// if( is_array( $new_attr ) ){
 						foreach( $new_attr as $nak => $nav ){
@@ -227,6 +227,21 @@ class Email_Encoder_Helpers {
 		// }
 
 		return apply_filters( 'eeb/helpers/parse_html_attributes', $attributes, $text );
+	}
+
+	/**
+	 * shortcode_parse_atts() without its C-style unescaping
+	 *
+	 * shortcode_parse_atts() decodes C-style escapes in every value (plain stripcslashes()
+	 * before WordPress 7.1.5), so the text \x22 in page HTML, which KSES lets through in
+	 * comments, came back as a real double quote. Doubling the backslashes first makes the
+	 * decoding return the value exactly as written.
+	 *
+	 * @param string $text
+	 * @return array<int|string, string>
+	 */
+	private function parse_atts_literal( string $text ) {
+		return shortcode_parse_atts( str_replace( '\\', '\\\\', $text ) );
 	}
 
 	/**

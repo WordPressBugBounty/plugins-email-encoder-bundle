@@ -113,11 +113,12 @@ class Encoding
             . '<script type="text/javascript">'
             . 'document.getElementById("' . $element_id . '").innerHTML = decodeURIComponent("';
 
-        if ( is_array( $split ) )
-        foreach ( $split as $c ) {
-            // preg split will return empty first and last characters, check for them and ignore
-            if ( ! empty( $c ) || $c === '0' ) {
-                $out .= '%' . dechex( ord( $c ) );
+        if ( is_array( $split ) ) {
+            foreach ( $split as $c ) {
+                // preg split will return empty first and last characters, check for them and ignore
+                if ( ! empty( $c ) || $c === '0' ) {
+                    $out .= '%' . dechex( ord( $c ) );
+                }
             }
         }
 
@@ -243,7 +244,10 @@ class Encoding
         foreach ( $attrs as $key => $value ) {
             if ( strtolower( $key ) === 'href' ) {
                 if ( $protection_method === 'without_javascript' ) {
-                    $link .= $key . '="' . antispambot( $value ) . '" ';
+                    // antispambot() only obfuscates: it leaves about half the characters raw,
+                    // a quote included, so the result still needs esc_attr() (which keeps its
+                    // &#NN; entities as they are).
+                    $link .= 'href="' . esc_attr( antispambot( $value ) ) . '" ';
                 } else {
                     $encoded_email = $this->get_encoded_email( $email );
 
@@ -266,7 +270,7 @@ class Encoding
         // When the display holds richer content (e.g. a builder-wrapped <span>Email us at x</span>),
         // keep the markup intact — the final filterPlainEmails pass below entity-encodes any emails
         // still embedded in it so bots can't harvest them.
-        $display_is_just_email = ( $email !== '' && trim( strip_tags( (string) $display ) ) === $email );
+        $display_is_just_email = ( $email !== '' && trim( wp_strip_all_tags( (string) $display ) ) === $email );
 
         if ( $display_is_just_email && trim( (string) $display ) !== $email ) {
             // The email is wrapped in markup, e.g. Elementor's icon list:
@@ -344,7 +348,8 @@ class Encoding
 
         foreach ( $attrs as $key => $value ) {
             if ( strtolower( $key ) === 'href' ) {
-                $link .= $key . '="' . antispambot( $value ) . '" ';
+                // antispambot() is not an escaper (see create_protected_mailto()).
+                $link .= 'href="' . esc_attr( antispambot( $value ) ) . '" ';
             } else {
                 $link .= esc_attr( $key ) . '="' . esc_attr( $value ) . '" ';
             }
